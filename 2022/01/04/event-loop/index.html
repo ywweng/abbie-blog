@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    
+    <title>Event Loop - 任務調配員 | Abbie&#39;s 學習筆記</title>
+
+    <meta name="description" content="&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
+&lt;hr&gt;">
+    <meta name="keywords" content="">
+
+    
+
+    <meta property="og:locale" content="zh-TW" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content= "Event Loop - 任務調配員 | Abbie&#39;s 學習筆記"  />
+    <meta property="og:description" content= "&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
+&lt;hr&gt;" />
+    <meta property="og:url" content="https://ywweng.github.io/2022/01/04/event-loop/index.html" />
+    <meta property="og:site_name" content="" />
+    <meta property="article:author" content="Abbie" />
+    <meta property="article:publisher" content="" />
+    <meta property="og:description" content="&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
+&lt;hr&gt;" />
+    <meta name="twitter:title" content="Event Loop - 任務調配員 | Abbie&#39;s 學習筆記"/>
+    <meta name="twitter:description" content="&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
+&lt;hr&gt;"/>
+    <script type="application/ld+json">
+        {
+            "description": "&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
+&lt;hr&gt;",
+            "author": { "@type": "Person", "name": "Abbie" },
+            "@type": "BlogPosting",
+            "url": "https://ywweng.github.io/2022/01/04/event-loop/index.html",
+            "publisher": {
+            "@type": "Organization",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://ywweng.github.ioundefined"
+            },
+            "name": "Abbie"
+            },
+            "headline": "Event Loop - 任務調配員 | Abbie&#39;s 學習筆記",
+            "datePublished": "2022-01-03T16:00:00.000Z",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://ywweng.github.io/2022/01/04/event-loop/index.html"
+            },
+            "@context": "http://schema.org"
+        }
+    </script>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💪🏻</text></svg>">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1654266144177.css">
+
+
+    
+<link rel="stylesheet" href="/dist/custom.css?v=1654266144177.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+            
+            
+        }
+        window.aomori_logo_typed_animated = true
+        window.aomori_search_algolia = false
+
+    </script>
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-inner">
+                
+                    <div id="typed-strings" style="display:none">
+                        <p>Abbie&#39;s 學習筆記</p>
+                    </div>
+                    <a class="header-type-title" id="typed" href="/"></a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">首頁</a>
+                
+                <a href="/archives">文章列表</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="https://github.com/ywweng">
+        <ion-icon name="logo-github"></ion-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">首頁</a>
+                    
+                    <a href="/archives">文章列表</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cl4fb2gj60002ibvt40g5gan3" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      Event Loop - 任務調配員
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2022-01-03T16:00:00.000Z" itemprop="datePublished">2022-01-04</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a>
+            </div>
+            
+
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h2 id="為什麼需要-Event-Loop"><a href="#為什麼需要-Event-Loop" class="headerlink" title="為什麼需要 Event Loop"></a>為什麼需要 Event Loop</h2><p>JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。<br>為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。</p>
+<hr>
+<span id="more"></span>
+
+<h2 id="運作"><a href="#運作" class="headerlink" title="運作"></a>運作</h2><ul>
+<li>呼叫堆疊（Call stack）<br>一種資料結構，等待執行的程式會放入堆疊中，採用先進後出的方式執行，執行完畢後清除，若程式為非同步任務則會呼叫 API 進入回呼隊列。</li>
+<li>回呼隊列（Callback Queue）<br>非同步任務排隊的地方，採用先進先出的方式執行。隊列又分為以下兩者：<ul>
+<li>宏任務隊列（Macrotasks）如：包括整體程式 script、setTimeout、setInterval。</li>
+<li>微任務隊列（Microtasks）：通常是由 Promise 物件建立的， <code>.then/catch/finally</code>  中的程式被執行會成為微任務，微任務會在宏任務執行前或渲染之前執行。</li>
+</ul>
+</li>
+<li>Event Loop 機制<br>不斷確認呼叫堆疊是否為空以及回呼隊列是否還有任務，是的話會將回呼隊列中的非同步任務推回呼叫堆疊執行。</li>
+</ul>
+<pre class="mermaid">flowchart TD
+    A(任務進入 Stack) -->|同步任務| B[Stack 執行任務]
+    A -->|非同步任務| C[推到 Queue 排隊]
+    C <-->|Queue 有任務?| D[Event Loop]
+    B --> E[任務執行完畢]
+    E <-->|Stack 為空?| D
+    D -->|是| F[推回 Stack]
+    F --> B</pre>
+<blockquote>
+<p>使用 mermaid.js 製作</p>
+</blockquote>
+<hr>
+<h2 id="範例"><a href="#範例" class="headerlink" title="範例"></a>範例</h2><h3 id="題一"><a href="#題一" class="headerlink" title="題一"></a>題一</h3><pre><code class="javascript">console.log(1); // 立即執行
+
+setTimeout(() =&gt; console.log(2)); // 推到 宏任務隊列
+
+Promise.resolve().then(() =&gt; console.log(3)); // 推到 微任務隊列
+
+Promise.resolve().then(() =&gt; setTimeout(() =&gt; console.log(4))); // 推到 微任務隊列
+
+Promise.resolve().then(() =&gt; console.log(5)); // 推到 微任務隊列
+
+setTimeout(() =&gt; console.log(6)); // 推到 宏任務隊列
+
+console.log(7); // 立即執行
+</code></pre>
+<p>發生順序  </p>
+<ol>
+<li><code>console.log(1)</code> 和 <code>console.log(7)</code>直接在 Stack 調用，輸出 <code>1</code> 和 <code>7</code> </li>
+<li>Stack 中程式執行完畢，開始執行微任務隊列：<ol>
+<li><code>console.log(3)</code>，推回 Stack 執行並直接輸出 <code>3</code></li>
+<li><code>setTimeout(() =&gt; console.log(4))</code>，推到宏任務隊列尾部</li>
+<li><code>console.log(5)</code>，推回 Stack 執行並直接輸出 <code>5</code></li>
+</ol>
+</li>
+<li>微任務隊列執行完畢，開始執行宏任務隊列：<ol>
+<li><code>console.log(2)</code>，推回 Stack 執行並直接輸出 <code>2</code></li>
+<li><code>console.log(6)</code>，推回 Stack 執行並直接輸出 <code>6</code></li>
+<li><code>console.log(4)</code>，推回 Stack 執行並直接輸出 <code>4</code></li>
+</ol>
+</li>
+</ol>
+<p>輸出結果  </p>
+<pre><code>1 7 3 5 2 6 4
+</code></pre>
+<h3 id="題二"><a href="#題二" class="headerlink" title="題二"></a>題二</h3><pre><code class="javascript">// 建立 Promise 物件
+const p = new Promise((resolve, reject) =&gt; &#123;
+  console.log(1) // 立即執行
+  resolve(2) // 非同步作業成功時才會呼叫，建立時不會回傳
+  console.log(3) // 立即執行
+  reject(4) // 非同步作業失敗時才會呼叫，建立時不會回傳
+&#125;)
+
+p
+  .then(value =&gt; &#123; // 非同步作業成功呼叫 resolve()
+    console.log(value) // 推到 微任務隊列
+    console.log(5) // 推到 微任務隊列
+  &#125;)
+  .catch(error =&gt; &#123;
+    console.log(error)
+  &#125;)
+
+console.log(6) // 立即執行
+</code></pre>
+<p>發生順序</p>
+<ol>
+<li>建立 Promise 物件屬於同步任務，在 Stack 調用 <code>console.log(1)</code> 和 <code>console.log(3)</code>，依序輸出 <code>1</code> 和 <code>3</code></li>
+<li><code>console.log(6)</code> 直接在 Stack 調用，輸出 <code>6</code></li>
+<li>Stack 中程式執行完畢，接下來處理微任務隊列：<ol>
+<li><code>console.log(value)</code>，value 為 resolve() 回傳的值，推回 Stack 執行並輸出 <code>2</code></li>
+<li><code>console.log(5)</code>，推回 Stack 執行並直接輸出 <code>5</code></li>
+</ol>
+</li>
+</ol>
+<p>輸出結果  </p>
+<pre><code>1 3 6 2 5
+</code></pre>
+<h3 id="題三"><a href="#題三" class="headerlink" title="題三"></a>題三</h3><pre><code class="javascript">console.log(1) // 立即執行
+
+setTimeout(() =&gt; &#123;
+  console.log(2)
+  Promise.resolve().then(() =&gt; console.log(3))
+&#125;, 0) // 推到 宏任務隊列
+
+// 建立 Promise 物件
+new Promise((resolve, reject) =&gt; &#123;
+  console.log(4)
+  resolve(5) // 非同步作業成功時才會呼叫，建立時不會回傳
+&#125;).then(data =&gt; console.log(data)) // 非同步作業成功呼叫 resolve()，推到微任務隊列
+
+setTimeout(() =&gt; &#123;
+  console.log(6)
+&#125;, 0) // 推到 宏任務隊列
+
+console.log(7) // 立即執行
+</code></pre>
+<p>發生順序  </p>
+<ol>
+<li><code>console.log(1)</code> 直接在 Stack 調用，輸出 <code>1</code></li>
+<li>建立 Promise 物件屬於同步任務，在 Stack 調用 <code>console.log(4)</code> ，輸出 <code>4</code></li>
+<li><code>console.log(7)</code> 直接在 Stack 調用，輸出 <code>7</code> </li>
+<li>Stack 中程式執行完畢，接下來處理微任務隊列：<ol>
+<li><code>console.log(data)</code>，data 為 resolve() 回傳的值，推回 Stack 執行並輸出 <code>5</code></li>
+</ol>
+</li>
+<li>微任務隊列執行完畢，開始執行宏任務隊列：<ol>
+<li><code>console.log(2)</code>，推回 Stack 執行並直接輸出 <code>2</code></li>
+<li><code>Promise.resolve().then(() =&gt; console.log(3))</code> 進入微任務隊列，推回 Stack 執行並輸出 <code>3</code></li>
+<li><code>console.log(6)</code>，推回 Stack 執行並直接輸出 <code>6</code></li>
+</ol>
+</li>
+</ol>
+<p>輸出結果</p>
+<pre><code>1 4 7 5 2 3 6
+</code></pre>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+  <div class="article-refer hairline">
+    <h3> 文章参考文献 </h3>
+    
+    <p>
+      <a target="_blank" rel="nofollow" href="https://pjchender.dev/javascript/js-event-loop-stack-queue/">理解 JavaScript 中的事件循環、堆疊、佇列和併發模式 - PJCHENder</a>
+    </p>
+    
+    <p>
+      <a target="_blank" rel="nofollow" href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">所以說event loop到底是什麼玩意兒？| Philip Roberts | JSConf EU</a>
+    </p>
+    
+    <p>
+      <a target="_blank" rel="nofollow" href="https://zh.javascript.info/event-loop">Event Loop：macrotasks and microtasks</a>
+    </p>
+    
+  </div>
+  
+
+    
+
+    
+
+    
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=Event Loop - 任務調配員 - Abbie's 學習筆記&url=https%3A%2F%2Fywweng.github.io%2F2022%2F01%2F04%2Fevent-loop%2F">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=Event Loop - 任務調配員 - Abbie's 學習筆記&u=https%3A%2F%2Fywweng.github.io%2F2022%2F01%2F04%2Fevent-loop%2F">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=Event Loop - 任務調配員 - Abbie's 學習筆記&url=https://ywweng.github.io/2022/01/04/event-loop/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+            
+            <aside class="sidebar ">
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/2022/01/04/event-loop/">Event Loop - 任務調配員</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+            
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <!-- Please do not remove this -->
+    <!-- 开源不易，请勿删除 -->
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            Abbie&#39;s 學習筆記 &copy; 2022<br>
+            Powered By Hexo · Theme By <a href="https://linhong.me/" target="_blank">Aomori</a> · <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Github</a>
+        </div>
+    </div>
+
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@6.0.2/dist/ionicons/ionicons.esm.js"></script>
+
+
+
+
+
+
+<script src="/dist/build.js?1654266144177.js"></script>
+
+
+<script src="/dist/custom.js?1654266144177.js"></script>
+
+
+
+
+<script src='https://unpkg.com/mermaid@9.1.1/dist/mermaid.min.js'></script>
+<script>
+    if (window.mermaid) {
+        mermaid.initialize({ theme: 'neutral' });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
