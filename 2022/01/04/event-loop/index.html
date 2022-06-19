@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     
-    <title>Event Loop - 任務調配員 | Abbie&#39;s 學習筆記</title>
+    <title>非同步的運作：Event Loop | Abbie&#39;s 學習筆記</title>
 
     <meta name="description" content="&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
 &lt;hr&gt;">
@@ -16,7 +16,7 @@
 
     <meta property="og:locale" content="zh-TW" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content= "Event Loop - 任務調配員 | Abbie&#39;s 學習筆記"  />
+    <meta property="og:title" content= "非同步的運作：Event Loop | Abbie&#39;s 學習筆記"  />
     <meta property="og:description" content= "&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
 &lt;hr&gt;" />
     <meta property="og:url" content="https://ywweng.github.io/2022/01/04/event-loop/index.html" />
@@ -25,7 +25,7 @@
     <meta property="article:publisher" content="" />
     <meta property="og:description" content="&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
 &lt;hr&gt;" />
-    <meta name="twitter:title" content="Event Loop - 任務調配員 | Abbie&#39;s 學習筆記"/>
+    <meta name="twitter:title" content="非同步的運作：Event Loop | Abbie&#39;s 學習筆記"/>
     <meta name="twitter:description" content="&lt;h2 id=&#34;為什麼需要-Event-Loop&#34;&gt;&lt;a href=&#34;#為什麼需要-Event-Loop&#34; class=&#34;headerlink&#34; title=&#34;為什麼需要 Event Loop&#34;&gt;&lt;/a&gt;為什麼需要 Event Loop&lt;/h2&gt;&lt;p&gt;JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。&lt;br&gt;為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。&lt;/p&gt;
 &lt;hr&gt;"/>
     <script type="application/ld+json">
@@ -43,7 +43,7 @@
             },
             "name": "Abbie"
             },
-            "headline": "Event Loop - 任務調配員 | Abbie&#39;s 學習筆記",
+            "headline": "非同步的運作：Event Loop | Abbie&#39;s 學習筆記",
             "datePublished": "2022-01-03T16:00:00.000Z",
             "mainEntityOfPage": {
                 "@type": "WebPage",
@@ -160,7 +160,7 @@
             <section class="inner">
                 <section class="inner-main">
                     <div class="post">
-    <article id="post-cl4fb2gj60002ibvt40g5gan3" class="article article-type-post" itemscope
+    <article id="post-cl4lgjmrd0002p4vt72m0f2qa" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -176,7 +176,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      Event Loop - 任務調配員
+      非同步的運作：Event Loop
     </h1>
   
 
@@ -363,19 +363,33 @@ console.log(7) // 立即執行
     
 
     
+<nav class="article-nav">
+  
+    <a href="/2022/06/07/sync-and-async/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          非同步與 callback, Promise, async/await
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
 
     <section class="share">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=Event Loop - 任務調配員 - Abbie's 學習筆記&url=https%3A%2F%2Fywweng.github.io%2F2022%2F01%2F04%2Fevent-loop%2F">
+            href="https://twitter.com/share?text=非同步的運作：Event Loop - Abbie's 學習筆記&url=https%3A%2F%2Fywweng.github.io%2F2022%2F01%2F04%2Fevent-loop%2F">
             <ion-icon name="logo-twitter"></ion-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=Event Loop - 任務調配員 - Abbie's 學習筆記&u=https%3A%2F%2Fywweng.github.io%2F2022%2F01%2F04%2Fevent-loop%2F">
+            href="https://www.facebook.com/sharer.php?title=非同步的運作：Event Loop - Abbie's 學習筆記&u=https%3A%2F%2Fywweng.github.io%2F2022%2F01%2F04%2Fevent-loop%2F">
             <ion-icon name="logo-facebook"></ion-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=Event Loop - 任務調配員 - Abbie's 學習筆記&url=https://ywweng.github.io/2022/01/04/event-loop/&pic=">
+            href="https://service.weibo.com/share/share.php?title=非同步的運作：Event Loop - Abbie's 學習筆記&url=https://ywweng.github.io/2022/01/04/event-loop/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>
@@ -436,7 +450,11 @@ console.log(7) // 立即執行
       <ul>
         
           <li>
-            <a href="/2022/01/04/event-loop/">Event Loop - 任務調配員</a>
+            <a href="/2022/06/07/sync-and-async/">非同步與 callback, Promise, async/await</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/04/event-loop/">非同步的運作：Event Loop</a>
           </li>
         
       </ul>

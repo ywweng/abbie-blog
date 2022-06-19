@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     
-    <title>Abbie&#39;s 學習筆記</title>
+    <title>Archive | 2022/6 | Abbie&#39;s 學習筆記</title>
 
     <meta name="description" content="Abbie&#39;s 學習筆記">
     <meta name="keywords" content="">
@@ -14,27 +14,6 @@
     
 
 
-
-    <meta property="og:type" content="website"/>
-    <meta property="og:title" content=""/>
-    <meta property="og:description" content=""/>
-    <meta property="og:locale" content="zh-TW" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://ywweng.github.io/index.html" />
-    <meta property="og:site_name" content="Abbie" />
-    <meta property="article:publisher" content="" />
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "",
-            "description": "",
-            "publisher": {
-                "@type": "Organization",
-                "name": "Abbie"
-            },
-        }
-    </script>
 
 
     
@@ -140,111 +119,33 @@
         <div class="main">
             <section class="inner">
                 <section class="inner-main">
-                    <div class="index">
-  
+                    
+
     
-      <article
-id="post-sync-and-async"
-class="article article-type-post"
->
-
-
-
-<div class="article-inner">
     
-
-    <div class="article-body">
-    <header class="article-title">
-        <a href="/2022/06/07/sync-and-async/">非同步與 callback, Promise, async/await</a>
-    </header>
-    <div class="article-entry post-inner-html">
-        
-        <h2 id="同步（Synchronous）與非同步（Asynchronous）"><a href="#同步（Synchronous）與非同步（Asynchronous）" class="headerlink" title="同步（Synchronous）與非同步（Asynchronous）"></a>同步（Synchronous）與非同步（Asynchronous）</h2><p>JavaScript 是屬於單執行緒的語言，它本身一次只能做一件事，做完再接續下一件，而 JavaScript 的執行環境（如瀏覽器、node.js）有提供一些方法來操控 JavaScript，其中借助了瀏覽器中的 Event Queue 讓 JavaScript 看起來可以同時做很多事，以做早餐為例：</p>
-<ul>
-<li>同步（Synchronous）</li>
-</ul>
-<pre class="mermaid">graph LR
-  煮紅茶 --> 紅茶加牛奶 --> 煎蛋 --> 煎豬肉排 --> 烤土司 --> 抹美乃滋 --> 製作蛋土司</pre>
-        
-    </div>
-    </div>
-
-    <div class="article-badge">
-        
-        
-    </div>
-
-</div>
-
-<footer class="article-footer">
-    <div class="article-more-info">
-    <div class="article-date">
-  <time datetime="2022-06-07T13:24:14.000Z" itemprop="datePublished">2022-06-07</time>
-</div>
     
-        <div class="article-category">
-        <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a>
+    
+    <section class="archives-wrap">
+        <div class="archive-year-wrap">
+        <a href="/archives/2022" class="archive-year">2022</a>
         </div>
+        <div class="archives">
     
-    
-    </div>
-</footer>
+    <article class="archive-article archive-type-post">
+  
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2022/06/07/sync-and-async/">非同步與 callback, Promise, async/await</a>
+    </h1>
+  
 
 </article>
 
-    
-  
-    
-      <article
-id="post-event-loop"
-class="article article-type-post"
->
+
+    </div></section>
 
 
 
-<div class="article-inner">
-    
-
-    <div class="article-body">
-    <header class="article-title">
-        <a href="/2022/01/04/event-loop/">非同步的運作：Event Loop</a>
-    </header>
-    <div class="article-entry post-inner-html">
-        
-        <h2 id="為什麼需要-Event-Loop"><a href="#為什麼需要-Event-Loop" class="headerlink" title="為什麼需要 Event Loop"></a>為什麼需要 Event Loop</h2><p>JavaScript 是屬於單執行緒的語言，一次只能做一件事（同步任務），瀏覽器中本身有提供多種非同步 API 給開發者使用，我們平常也會使用到第三方 API（如： Google Map API），想像一下，當我們向這些非同步 API 發送請求時，如果只能一一等待他們回應，這過程中可能造成瀏覽器無法跑其他程式，這種卡住的現象稱作阻塞 (blocking)。<br>為了避免阻塞的狀況，需要有事件循環機制 (Event Loop) 來協助處理非同步 API。</p>
-<hr>
-        
-    </div>
-    </div>
-
-    <div class="article-badge">
-        
-        
-    </div>
-
-</div>
-
-<footer class="article-footer">
-    <div class="article-more-info">
-    <div class="article-date">
-  <time datetime="2022-01-03T16:00:00.000Z" itemprop="datePublished">2022-01-04</time>
-</div>
-    
-        <div class="article-category">
-        <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a>
-        </div>
-    
-    
-    </div>
-</footer>
-
-</article>
-
-    
-  
-
-  
-</div>
 
                 </section>
             </section>
